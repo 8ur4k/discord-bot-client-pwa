@@ -25,23 +25,25 @@ function initializeSocket() {
     type: "STREAMING",
     url: "https://www.twitch.tv/8ur4kk_",
   });
-
-  io.on("connect", (e) => {
-    client.on("message", (msg) => {
-      const message = msg.content.toLowerCase();
-      if (msg.channel.type == "dm") {
-        return msg.author.send("8ur4k Lewis#0001");
-      }
-
-      if (message == ".notif") {
-        socket.emit("notif");
-      }
-    });
-
-    socket.on("alert-mode", function (message) {
-      channel.send(message);
-    });
-  });
 }
+
+io.on("connect", (socket) => {
+  console.log("Socket connected");
+
+  socket.on("alert-mode", () => {
+    console.log("ALERT!");
+  });
+
+  client.on("message", (msg) => {
+    const message = msg.content.toLowerCase();
+    if (msg.channel.type == "dm") {
+      return msg.author.send("8ur4k Lewis#0001");
+    }
+
+    if (message == ".notif") {
+      socket.emit("notif");
+    }
+  });
+});
 
 client.login(process.env.TOKEN);
